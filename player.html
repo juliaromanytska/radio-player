@@ -3,42 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Radio Player</title>
+  <title>Live Radio</title>
 
-  <!-- Minimal styles so it looks tidy inside an iframe -->
+  <link rel="preconnect" href="https://code.jquery.com">
+  <link rel="preconnect" href="https://public.radio.co">
+
   <style>
     :root { color-scheme: light dark; }
     body { margin: 0; font-family: system-ui, Arial, sans-serif; }
-    #wrap { max-width: 460px; margin: 0 auto; padding: 12px; }
-    .rp-title { font-size: 16px; margin: 0 0 8px; text-align: center; }
-    /* The plugin will inject its own controls; container just needs space */
-    #radio-inline { width: 100%; }
+    #wrap { max-width: 480px; margin: 0 auto; padding: 12px; }
+    h1 { font-size: 16px; text-align: center; margin: 0 0 8px; }
+    /* Give the plugin some space so it becomes visible */
+    #radio-inline { min-height: 150px; }
+    #fallback { display: none; }
   </style>
 
-  <!-- jQuery + Radio.co DIY player plugin -->
+  <!-- Required scripts for Radio.co DIY player -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://public.radio.co/playerapi/jquery.radiocoplayer.min.js"></script>
 </head>
 <body>
   <div id="wrap">
-    <h1 class="rp-title">Live Radio</h1>
+    <h1>Live Radio</h1>
 
-    <!-- Inline player container – uses YOUR stream URL -->
+    <!-- Inline player container -->
     <div id="radio-inline" class="radioplayer"
-        data-src="https://s4.radio.co/s0b05fe503/listen"
-        data-playbutton="true"
-        data-volumeslider="true"
-        data-nowplaying="true">
+         data-src="https://streaming.radio.co/s0b05fe503/listen"
+         data-autoplay="false"
+         data-playbutton="true"
+         data-volumeslider="true"
+         data-nowplaying="true"
+         data-showplayer="true"
+         data-volume="75">
+    </div>
+
+    <!-- Fallback: native audio controls (will show only if the plugin fails) -->
+    <div id="fallback">
+      <audio controls preload="none" style="width:100%;">
+        <source src="https://streaming.radio.co/s0b05fe503/listen" type="audio/mpeg">
+        Your browser doesn’t support audio.
+      </audio>
     </div>
   </div>
 
   <script>
-    // Initialize after DOM is ready
-    jQuery(function () {
-      if (jQuery.fn && jQuery.fn.radiocoPlayer) {
-        jQuery('.radioplayer').radiocoPlayer();
+    (function init() {
+      function showFallback(){ document.getElementById('fallback').style.display = 'block'; }
+      function start(){ try { jQuery('.radioplayer').radiocoPlayer(); } catch(e) { showFallback(); } }
+
+      if (window.jQuery && jQuery.fn && jQuery.fn.radiocoPlayer) {
+        start();
+      } else {
+        let tries = 0, t = setInterval(() => {
+          tries++;
+          if (window.jQuery && jQuery.fn && jQuery.fn.radiocoPlayer) { clearInterval(t); start(); }
+          else if (tries > 10) { clearInterval(t); showFallback(); }
+        }, 150);
       }
-    });
+    })();
   </script>
 </body>
 </html>
+
