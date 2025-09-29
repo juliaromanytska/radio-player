@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Radio Player</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300" rel="stylesheet">
+  <style>
+    html, body { margin:0; padding:0; background:transparent; font-family: Arial, sans-serif; }
+    .radioplayer {
+      width: 500px; height: 109px;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important; overflow: hidden;
+      user-select: none;
+    }
+    .radioco-bg, .radioco-image { display:none !important; }
+    .radioco-information { background: transparent !important; }
+    .radioco-playButton { margin-left: 0 !important; top: 0 !important; z-index: 2; font-size: 50px; color:#fff; }
+    .radioco-playButton-playing:before { font-family: 'FontAwesome', sans-serif; content: "\f04b"; }
+    .radioco-playButton-paused:before  { font-family: 'FontAwesome', sans-serif; content: "\f04c"; }
+  </style>
+</head>
+<body>
+  <div class="radioplayer"
+       data-src="https://s4.radio.co/s0b05fe503/listen"
+       data-autoplay="false"
+       data-playbutton="true"
+       data-volumeslider="true"
+       data-elapsedtime="true"
+       data-nowplaying="true"
+       data-showplayer="true"
+       data-volume="50"></div>
+
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://public.radio.co/playerapi/jquery.radiocoplayer.min.js"></script>
+  <script> $('.radioplayer').radiocoPlayer(); </script>
+</body>
+</html>
